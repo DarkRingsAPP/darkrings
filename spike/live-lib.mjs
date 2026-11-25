@@ -53,12 +53,23 @@ export async function makeCtx() {
   if (!K) throw new Error("HELIUS_API_KEY missing");
   await initializePoseidon();
   const wasm = await import("../loan/target/zk/loan-program/wasm-node/loan_program.js");
+  const debugFetch = process.env.DEBUG_PROVER === "1"
+    ? async (...args) => {
+        const res = await globalThis.fetch(...args);
+        if (!res.ok) {
+          const text = await res.clone().text().catch(() => "");
+          console.log("PROVER HTTP", res.status, String(args[0]).slice(0, 90), "BODY:", text.slice(0, 500));
+        }
+        return res;
+      }
+    : undefined;
   const client = new SprClient({
     solanaRpcUrl: `https://mainnet.helius-rpc.com/?api-key=${K}`,
     indexerUrl: `https://mainnet.helius-rpc.com/v1/spr?api-key=${K}`,
     proverUrl: `https://mainnet.helius-rpc.com/v1/spr?api-key=${K}`,
-    proverTee: SignedTeePolicy.forNetwork("mainnet"),
+    ...(process.env.NO_TEE === "1" ? {} : { proverTee: SignedTeePolicy.forNetwork("mainnet") }),
     priorityFeeLamports: 60_000n,
+    ...(debugFetch ? { fetch: debugFetch } : {}),
   });
   const tree = await getTreeAddress(0);
   return { client, wasm, tree };
@@ -121,6 +132,15 @@ export function toTsInput(u) {
 }
 
 export function toTsOutput(o) {
+  if (!o.ownerAddress) {
+    // Padding slot: no owner, zero amount; keep the wasm's blinding and tag.
+    return createProofOutput({
+      asset: SOL_MINT_ADDR,
+      amount: 0n,
+      blinding: o.blinding,
+      ...(o.ownerTag ? { ownerTag: o.ownerTag } : {}),
+    });
+  }
   return createProofOutput({
     ownerAddress: ShieldedAddress.fromBytes(o.ownerAddress),
     asset: SOL_MINT_ADDR,
@@ -189,10 +209,18 @@ export function finalizeSpp(ctx, ft, tsOutputs, senderKeypair, { messages = [], 
     const encrypted = encryptConfidentialTransfer(key, { outputs: tsOutputs, assets: new AssetRegistry() });
     const txOutputs = [];
     const resolvedTags = [];
+    const realLength = encrypted.payload.find((p) => p)?.data.length ?? 0;
     tsOutputs.forEach((output, index) => {
       const slot = encrypted.payload[index];
       const utxoHash = output.hash(ft.outputTreeId);
-      if (index < senderOutputCount) {
+      if (!slot) {
+        // Padding slot: the wasm's resolved tag and a length-matched random body.
+        const tag = ft.ownerTags[index];
+        const body = new Uint8Array(realLength);
+        crypto.getRandomValues(body);
+        txOutputs.push({ utxoHash, ownerTag: tag.tag, data: body });
+        resolvedTags.push(tag.resolved);
+      } else if (index < senderOutputCount) {
         txOutputs.push({ utxoHash, ownerTag: senderTag, data: slot.data });
         resolvedTags.push(senderResolved);
       } else {
@@ -229,7 +257,7 @@ export function circuitProof(ctx, circuitName, flatInputs) {
 }
 
 /** The loan instruction: tag + body + encoded transact, with the Rust account order. */
-export async function loanInstruction(ctx, { tag, body, transact, payer, owners = [] }) {
+export async function loanInstruction(ctx, { tag, body, transact, payer, owners = [], lenderSigner }) {
   const transactBytes = encodeTransactInstructionData(transact);
   const data = new Uint8Array(1 + body.reduce((n, b) => n + b.length, 0) + transactBytes.length);
   let off = 0;
@@ -245,6 +273,7 @@ export async function loanInstruction(ctx, { tag, body, transact, payer, owners 
   );
   const accounts = [
     { address: payer, role: 3 },
+    ...(lenderSigner ? [{ address: lenderSigner, role: 2 }] : []),
     { address: payer, role: 3 },
     { address: ctx.tree, role: 1 },
     { address: SHIELDED_POOL_PROGRAM_ID, role: 0 },
