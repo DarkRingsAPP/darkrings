@@ -127,6 +127,11 @@ const built = wasm.offerTransaction(
   lenderSolana,
 );
 const ft = built.finalizedTx;
+console.log("tx_context flat:", JSON.stringify(Object.entries(built.proofInputs).filter(([k]) => k.includes("tx_context"))));
+console.log("blinding bytes BE hex:", Buffer.from(wasmNote.utxo.blinding).toString("hex"));
+console.log("flat blinding dec:", built.proofInputs["program.private.source.blinding"]);
+console.log("BE dec:", (() => { let v = 0n; for (const x of wasmNote.utxo.blinding) v = (v << 8n) | BigInt(x); return v.toString(); })());
+console.log("LE dec:", (() => { let v = 0n; const b = wasmNote.utxo.blinding; for (let i = b.length - 1; i >= 0; i--) v = (v << 8n) | BigInt(b[i]); return v.toString(); })());
 console.log("built; outputs:", ft.outputUtxos.map((o) => String(o.amount)), "firstNullifier:", Buffer.from(ft.firstNullifier).toString("hex").slice(0, 12));
 
 stage("TS conversion: inputs/outputs");

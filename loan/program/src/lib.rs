@@ -74,3 +74,23 @@ pub fn process_instruction(
         _ => Err(ProgramError::InvalidInstructionData),
     }
 }
+
+/// Browser helpers the generated wasm module does not cover: the loan blinding
+/// seed derivation, which the originate and repay circuits enforce.
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+mod wasm_extra {
+    use wasm_bindgen::prelude::*;
+
+    #[wasm_bindgen(js_name = "blindingSeed")]
+    pub fn blinding_seed(domain: u32, blinding: &[u8]) -> Result<Vec<u8>, JsError> {
+        let bytes: [u8; 32] = blinding
+            .try_into()
+            .map_err(|_| JsError::new("blinding must be 32 bytes"))?;
+        // The circuits enforce spr-circuit's native Poseidon, which differs
+        // from the hasher the wasm feature wires into spr_program::poseidon.
+        let field = spr_circuit::from_bytes(&bytes).map_err(|e| JsError::new(&format!("{e:?}")))?;
+        let seed = spr_circuit::poseidon(&[spr_circuit::Field::from(domain), field])
+            .map_err(|e| JsError::new(&format!("{e:?}")))?;
+        Ok(spr_circuit::to_bytes(&seed).to_vec())
+    }
+}

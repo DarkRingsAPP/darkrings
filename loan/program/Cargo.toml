@@ -20,13 +20,15 @@ bpf-entrypoint = []
 # The Rust circuits and their native witness execution.
 circuits = ["dep:xark", "spr-program/client"]
 # Browser prover: the circuits' clients compiled to WASM with the xark prover.
-wasm = ["circuits", "spr-program/wasm-prover"]
+wasm = ["circuits", "spr-program/wasm-prover", "dep:wasm-bindgen", "dep:spr-circuit"]
 # Enabled only while `zolana zk compile` discovers the programs, before the
 # generated verifiers exist.
 build-circuits = ["circuits", "spr-program/build"]
 profile-program = ["light-program-profiler/profile-program"]
 
 [dependencies]
+wasm-bindgen = { version = "0.2", optional = true }
+spr-circuit = { version = "0.10.0", optional = true }
 xark = { workspace = true, optional = true }
 borsh = { workspace = true }
 groth16-solana = { workspace = true, features = ["bsb22"] }

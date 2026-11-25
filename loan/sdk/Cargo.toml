@@ -46,3 +46,6 @@ path = "tests/instruction_signers.rs"
 [[test]]
 name = "offer_transaction"
 path = "tests/offer_transaction.rs"
+
+[dev-dependencies.hex]
+version = "0.4"
