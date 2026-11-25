@@ -77,7 +77,7 @@ const SEED_MY_OFFERS = [
 
 /* app-surface primitives: square-ish, hairline-tiled, dense */
 const CELL = "bg-surface";
-const LABEL = "font-mono text-[9.5px] uppercase tracking-[0.14em] text-faint";
+const LABEL = "font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-faint";
 
 /* ---------------------------------- toasts -------------------------------- */
 
@@ -196,7 +196,7 @@ function MarketsRail({ selected, onSelect }) {
               />
             )}
             <span>
-              <span className="block font-mono text-[12px] font-medium text-bone">
+              <span className="block font-ui text-[12.5px] font-semibold text-bone">
                 {mk.collateral}/{mk.principal}
               </span>
               <span className="num text-[10px] text-faint">{mk.rateBand} fixed</span>
@@ -207,7 +207,7 @@ function MarketsRail({ selected, onSelect }) {
         );
       })}
       <div className="panel-amber mt-auto flex items-center justify-between px-4 py-2.5">
-        <span className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-bone/70">
+        <span className="font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-bone/70">
           Book size, all
         </span>
         <span className="num text-[11.5px] text-bone/80">{"▮▮,▮▮▮,▮▮▮"}</span>
@@ -227,7 +227,7 @@ function OfferBook({ market, list, selectedId, onPick, onCompose }) {
       {/* toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-2.5">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[13px] font-medium text-bone">
+          <span className="font-ui text-[13.5px] font-semibold text-bone">
             {market.collateral}/{market.principal}
           </span>
           <span className="num text-[10.5px] text-faint">{market.term}</span>
@@ -341,7 +341,7 @@ function OrderTicket({ offer, market, composing, onCompose, onConfirm, onClear, 
       ) : offer ? (
         <div className="flex flex-1 flex-col px-4 py-3.5">
           <div className="flex items-baseline justify-between">
-            <span className="font-mono text-[12.5px] font-medium text-bone">
+            <span className="font-ui text-[13px] font-semibold text-bone">
               {market.collateral}/{market.principal}
             </span>
             <span className="num text-[11px] text-faint">{offer.lender}</span>
@@ -429,7 +429,7 @@ function ComposeOffer({ market, onSubmit, onCancel }) {
 
   return (
     <div className="flex flex-1 flex-col px-4 py-3.5">
-      <p className="font-mono text-[12.5px] font-medium text-bone">
+      <p className="font-ui text-[13px] font-semibold text-bone">
         New offer, {market.collateral}/{market.principal}
       </p>
       <div className="mt-3 space-y-3">
@@ -580,7 +580,7 @@ function MyOffersTable({ myOffers, now, onCancelOffer }) {
               key={o.id}
               className={`grid grid-cols-2 gap-x-3 gap-y-2 border-b border-line/50 px-4 py-3 transition-colors last:border-b-0 hover:bg-raised/50 md:items-center ${MY_COLS}`}
             >
-              <span className="font-mono text-[12px] font-medium text-bone">
+              <span className="font-ui text-[12.5px] font-semibold text-bone">
                 {market.collateral}/{market.principal}
               </span>
               <span className="num text-[12px] text-ink">{o.rate}</span>
@@ -595,7 +595,7 @@ function MyOffersTable({ myOffers, now, onCancelOffer }) {
               </span>
               <span className="flex flex-col gap-0.5">
                 <span
-                  className={`w-fit rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
+                  className={`w-fit rounded border px-1.5 py-0.5 font-ui text-[9px] font-medium uppercase tracking-wider ${
                     expired
                       ? "border-line-bright text-mute"
                       : o.designated
@@ -670,7 +670,7 @@ function PositionsTable({ positions, now, onRepay, onClaim }) {
             key={pos.id}
             className={`grid grid-cols-2 gap-x-3 gap-y-2 border-b border-line/50 px-4 py-3 transition-colors last:border-b-0 hover:bg-raised/50 md:items-center ${POS_COLS}`}
           >
-            <span className="font-mono text-[12px] font-medium text-bone">
+            <span className="font-ui text-[12.5px] font-semibold text-bone">
               {market.collateral}/{market.principal}
             </span>
             <span className="text-[11.5px] capitalize text-mute">{pos.role}</span>
@@ -685,7 +685,7 @@ function PositionsTable({ positions, now, onRepay, onClaim }) {
             </span>
             <span className="flex flex-col gap-0.5">
               <span
-                className={`w-fit rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${META[pos.state]}`}
+                className={`w-fit rounded border px-1.5 py-0.5 font-ui text-[9px] font-medium uppercase tracking-wider ${META[pos.state]}`}
               >
                 {pos.state}
               </span>
@@ -695,7 +695,7 @@ function PositionsTable({ positions, now, onRepay, onClaim }) {
             </span>
             <span className="col-span-2 md:col-span-1">
               {pos.state === "active" && pos.role === "lender" ? (
-                <span className="block text-right font-mono text-[9.5px] uppercase tracking-wider text-faint">
+                <span className="block text-right font-ui text-[9.5px] font-medium uppercase tracking-wider text-faint">
                   awaiting repay
                 </span>
               ) : pos.state === "active" && pos.role === "borrower" ? (
@@ -715,7 +715,7 @@ function PositionsTable({ positions, now, onRepay, onClaim }) {
                   Claim
                 </button>
               ) : (
-                <span className="block text-right font-mono text-[9.5px] uppercase tracking-wider text-faint">
+                <span className="block text-right font-ui text-[9.5px] font-medium uppercase tracking-wider text-faint">
                   settled
                 </span>
               )}
@@ -840,7 +840,7 @@ export default function Desk() {
               <h1 className="display text-[clamp(22px,2.4vw,28px)] uppercase text-bone">
                 The desk
               </h1>
-              <span className="rounded border border-line-bright px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-mute">
+              <span className="rounded border border-line-bright px-1.5 py-0.5 font-ui text-[9px] font-medium uppercase tracking-wider text-mute">
                 demo data
               </span>
               <div className="ml-2 hidden gap-5 border-l border-line pl-5 sm:flex">
@@ -965,7 +965,7 @@ export default function Desk() {
         {/* status bar */}
         <div className="keyline relative">
           <div className="mx-auto flex max-w-[1480px] flex-wrap items-center justify-between gap-2 px-4 py-2.5 md:px-6">
-            <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-faint">
+            <span className="font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-faint">
               Demo desk, sample data. Settlement logic mirrors the on-chain program.
             </span>
             <span className="num text-[10px] text-faint">{"program 4j3M…ZHfE"}</span>
