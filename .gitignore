@@ -9,3 +9,5 @@ vendor/
 program-keypair.json
 *keypair*.json
 *.ptau
+.env
+.env.local

@@ -19,6 +19,8 @@ insecure-test-setup = []
 bpf-entrypoint = []
 # The Rust circuits and their native witness execution.
 circuits = ["dep:xark", "spr-program/client"]
+# Browser prover: the circuits' clients compiled to WASM with the xark prover.
+wasm = ["circuits", "spr-program/wasm-prover"]
 # Enabled only while `zolana zk compile` discovers the programs, before the
 # generated verifiers exist.
 build-circuits = ["circuits", "spr-program/build"]
