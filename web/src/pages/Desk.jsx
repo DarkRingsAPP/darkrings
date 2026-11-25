@@ -968,7 +968,7 @@ export default function Desk() {
             <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-faint">
               Demo desk, sample data. Settlement logic mirrors the on-chain program.
             </span>
-            <span className="num text-[10px] text-faint">{"program BGCJ…sQLh"}</span>
+            <span className="num text-[10px] text-faint">{"program 4j3M…ZHfE"}</span>
           </div>
         </div>
       </div>

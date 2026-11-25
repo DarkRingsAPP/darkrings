@@ -54,7 +54,7 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="font-mono text-[11px] uppercase tracking-[0.22em] text-mute"
         >
-          Built on Solana Privacy Rings
+          Private credit on Solana
         </m.p>
 
         {/* phones: LOANS / WITHOUT A / LIQUIDATION / PRICE. */}
@@ -94,7 +94,7 @@ function Hero() {
             className="max-w-[40ch] text-[16px] leading-relaxed text-mute"
           >
             Fixed-term, overcollateralized credit with every amount encrypted
-            on-chain. There is nothing left to hunt.
+            on Solana Privacy Rings. There is nothing left to hunt.
           </m.p>
           <m.div
             initial={reduce ? false : { opacity: 0, y: 16 }}

@@ -149,7 +149,7 @@ function Footer() {
             and ZK Security
           </span>
           <span className="num text-[10.5px] text-faint">
-            {"loan program BGCJ\u2026sQLh"}
+            {"loan program 4j3M\u2026ZHfE"}
           </span>
         </div>
       </div>

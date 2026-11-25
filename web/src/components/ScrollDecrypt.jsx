@@ -11,7 +11,7 @@ import Decrypt from "./Decrypt.jsx";
 /* The originate transaction, field by field. The first entries are what an
    explorer already knows; scrolling turns the view key and the rest resolve. */
 const FIELDS = [
-  { label: "Program", value: "loan BGCJ…sQLh", public: true },
+  { label: "Program", value: "loan 4j3M…ZHfE", public: true },
   { label: "Instruction", value: "originate", public: true },
   { label: "Signers", value: "borrower, loan PDA", public: true },
   { label: "Principal", value: "3,200.00 USDC", public: false },
