@@ -2967,6 +2967,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "loan-mainnet-run"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "loan-sdk",
+ "solana-address 2.7.0",
+ "solana-instruction 3.5.1",
+ "solana-keypair",
+ "solana-signature",
+ "solana-signer",
+ "solana-system-interface 2.0.0",
+ "spr-client",
+ "spr-interface",
+ "spr-keypair",
+ "spr-program",
+ "spr-transaction",
+ "url",
+]
+
+[[package]]
 name = "loan-program"
 version = "0.1.0"
 dependencies = [

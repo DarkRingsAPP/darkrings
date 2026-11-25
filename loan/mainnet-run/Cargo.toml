@@ -1,0 +1,21 @@
+[package]
+name = "loan-mainnet-run"
+version = "0.1.0"
+edition.workspace = true
+publish = false
+
+[dependencies]
+anyhow = { workspace = true }
+loan-sdk = { path = "../sdk" }
+solana-address = { workspace = true }
+solana-instruction = { workspace = true }
+solana-keypair = { workspace = true }
+solana-signature = { workspace = true }
+solana-signer = { workspace = true }
+solana-system-interface = { version = "2.0", features = ["bincode"] }
+spr-client = { workspace = true, features = ["reqwest", "solana-rpc"] }
+spr-interface = { workspace = true }
+spr-keypair = { workspace = true }
+spr-program = { workspace = true, features = ["client"] }
+spr-transaction = { workspace = true }
+url = "2"

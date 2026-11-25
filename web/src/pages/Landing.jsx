@@ -54,14 +54,14 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="font-mono text-[11px] uppercase tracking-[0.22em] text-mute"
         >
-          Private credit on Solana
+          Built on Solana Privacy Rings
         </m.p>
 
         {/* phones: LOANS / WITHOUT A / LIQUIDATION / PRICE. */}
-        <h1 className="display mt-6 text-[clamp(44px,13vw,64px)] uppercase text-bone md:hidden">
+        <h1 className="display mt-6 text-[clamp(40px,11vw,64px)] uppercase text-bone md:hidden">
           <span className="block overflow-hidden pb-[0.08em]">
             <m.span className="block" {...maskRise(0.15)}>
-              Loans
+              Private loans
               <br /> {"without\u00A0a"}
             </m.span>
           </span>
@@ -73,15 +73,20 @@ function Hero() {
           </span>
         </h1>
         {/* desktop: LOANS WITHOUT / A LIQUIDATION / PRICE. */}
-        <h1 className="display mt-6 hidden text-[clamp(52px,9.5vw,138px)] uppercase text-bone md:block">
+        <h1 className="display mt-6 hidden text-[clamp(48px,7.6vw,110px)] uppercase text-bone md:block">
           <span className="block overflow-hidden pb-[0.08em]">
             <m.span className="block" {...maskRise(0.15)}>
-              Loans without
+              Private loans
             </m.span>
           </span>
           <span className="block overflow-hidden pb-[0.08em]">
             <m.span className="block" {...maskRise(0.26)}>
-              a <ScrambleText text="liquidation" delay={1050} duration={750} className="text-ember" /> price.
+              without a
+            </m.span>
+          </span>
+          <span className="block overflow-hidden pb-[0.08em]">
+            <m.span className="block" {...maskRise(0.37)}>
+              <ScrambleText text="liquidation" delay={1050} duration={750} className="text-ember" /> price.
             </m.span>
           </span>
         </h1>
@@ -94,7 +99,7 @@ function Hero() {
             className="max-w-[40ch] text-[16px] leading-relaxed text-mute"
           >
             Fixed-term, overcollateralized credit with every amount encrypted
-            on Solana Privacy Rings. There is nothing left to hunt.
+            on-chain. There is nothing left to hunt.
           </m.p>
           <m.div
             initial={reduce ? false : { opacity: 0, y: 16 }}
