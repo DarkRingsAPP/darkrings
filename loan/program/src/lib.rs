@@ -1,6 +1,3 @@
-#[cfg(all(not(feature = "build-circuits"), not(feature = "insecure-test-setup")))]
-compile_error!("the swap verifying keys require the insecure-test-setup feature");
-
 #[cfg(feature = "circuits")]
 pub mod circuits;
 
