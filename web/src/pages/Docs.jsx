@@ -14,7 +14,7 @@ const DOCS = [
       { t: "ul", x: ["Principal, collateral, repayment amounts", "Collateral ratios, individually and in aggregate", "Market volumes and book depth", "Realized rates of any particular loan"] },
       { t: "h2", x: "What is public" },
       { t: "ul", x: ["That the loan program ran, and which instruction", "Participating Solana addresses (the default ring keeps addresses visible)", "Market parameters: terms, rate bands, minimum ratios", "Deadlines, at the moment repay or claim reveals them"] },
-      { t: "callout", x: "Status: the loan program is complete and verified on localnet with 75 passing tests, including three full-lifecycle end-to-end runs. It is pre-audit and its proving keys are a public test setup. Do not use it with real funds yet." },
+      { t: "callout", x: "Status: live on mainnet with one full lifecycle settled in real SOL, after 75 passing tests and three localnet end-to-end runs. It is pre-audit, with keys built on the Hermez Powers of Tau. Treat it as a working proof, not a vault." },
     ],
   },
   {
@@ -85,7 +85,7 @@ const DOCS = [
       { t: "p", x: "The suite is 75 tests: circuit tests that prove and verify every instruction, adversarial tests that tamper with every public input, and three localnet end-to-end runs covering the full lifecycle, cancellation and a real-clock default claim." },
       { t: "h2", x: "Rails" },
       { t: "p", x: "Settlement happens inside the Solana Privacy Program, audited by OtterSec, Certora and ZK Security, with formal verification in progress by the Helius team." },
-      { t: "callout", x: "The DarkRings program itself is pre-audit and its proving keys come from a public, deterministic test setup. Anyone who knows the seed can forge proofs against these keys. A trusted setup ceremony precedes any deployment that touches value." },
+      { t: "callout", x: "The DarkRings program itself is pre-audit. Its proving keys are a phase-2 setup over the public Hermez Powers of Tau transcript, single-party and with the randomness discarded; a multi-party phase-2 ceremony precedes any deployment that custodies meaningful value." },
     ],
   },
   {
@@ -114,7 +114,7 @@ const DOCS = [
       { t: "h3", x: "Default risk" },
       { t: "p", x: "If your borrower does not repay, you receive the collateral instead of the repayment. Overcollateralization cushions this; it does not eliminate it. The collateral's price can fall during the term, and no one will liquidate early on your behalf, by design." },
       { t: "h3", x: "Contract risk" },
-      { t: "p", x: "The loan program is new and unaudited, and today it runs on test keys that offer no security. It handles no real value until a trusted setup ceremony and an audit say otherwise." },
+      { t: "p", x: "The loan program is new and unaudited. Its keys build on the Hermez Powers of Tau with a single-party phase-2, so it should hold no meaningful value until a multi-party ceremony and an audit say otherwise." },
       { t: "h3", x: "Rails risk" },
       { t: "p", x: "Solana Privacy Rings shipped to mainnet in November 2026 and its endpoints are labeled beta. DarkRings inherits any fault in the rails it builds on." },
       { t: "h3", x: "Rollover risk" },

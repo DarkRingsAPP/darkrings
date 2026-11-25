@@ -3,6 +3,16 @@ import AmberSilk from "../components/AmberSilk.jsx";
 const ENTRIES = [
   {
     date: "2026-11-25",
+    title: "Live on Solana mainnet",
+    items: [
+      "The loan program deploys to mainnet: 4j3M…ZHfE, upgrade authority held, rent recoverable",
+      "Proving keys regenerated over the Hermez Powers of Tau; the binary passes the official key check with no test setup found",
+      "One full loan lifecycle settles on mainnet with real SOL: offer, discovery, originate, repay; every figure encrypted on-chain",
+      "The run is reproducible: loan/mainnet-run drives fund, deposit, lifecycle and sweep against the live stack",
+    ],
+  },
+  {
+    date: "2026-11-25",
     title: "The desk covers the whole protocol",
     items: [
       "Lenders post offers from the ticket pane, with live repay and ratio preview against each market's minimum",

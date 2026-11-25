@@ -250,8 +250,14 @@ const PROOFS = [
     n: 75,
     suffix: "",
     label: "tests passing",
-    body: "Adversarial suites and three full lifecycles on a live localnet.",
+    body: "Adversarial suites, three localnet lifecycles, then the real one on mainnet.",
   },
+];
+
+const MAINNET_TXS = [
+  ["Offer", "3ssx9gJT5RYHCBDgqSWvQM3QKuEHHYXcbyvoQQRG8rZoJdjSgmqNgRrfKBEM6oWfZEAyGMayFKcUCUeXYAA2W6sG"],
+  ["Originate", "4FY9asu1pZfppLKHtp7sr6Z3pG9VskzcrKcePSHBGfLKC4ofhRJkUufEGdMf57gfndXsJr4jbEbY2CP9KnBzMBwm"],
+  ["Repay", "yrCDVMU1TkUQ4i6ECzzfGPjQSxGsLE1TMAJKgW36wfqPaq395aWgKCQcPdwFsiSRtHN2P2dNPiiAUSrTD9jFkvj"],
 ];
 
 function Proof() {
@@ -322,13 +328,32 @@ function Proof() {
             <p className="num mt-3 break-all text-[13.5px] font-medium text-void">
               4j3MfrBtrhrLV4Lu7JpP5TqbAHbZY6AkLmMUaR3TZHfE
             </p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-void/10 pt-4">
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-void/55">
+                Live on mainnet, one full loan:
+              </span>
+              {MAINNET_TXS.map(([label, sig]) => (
+                <a
+                  key={label}
+                  href={`https://explorer.solana.com/tx/${sig}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group inline-flex items-center gap-1 text-[12.5px] font-semibold text-void"
+                >
+                  <span className="underline decoration-void/25 underline-offset-4 transition-colors group-hover:decoration-ember">
+                    {label}
+                  </span>
+                  <ArrowUpRight size={12} weight="bold" className="text-ember" />
+                </a>
+              ))}
+            </div>
           </div>
           <div className="flex items-start gap-3 rounded-2xl border border-ember/35 bg-ember/10 px-6 py-5">
             <ShieldCheck size={18} weight="bold" className="mt-0.5 shrink-0 text-ember" />
             <p className="text-[12.5px] leading-relaxed text-void/75">
-              New and pre-audit, with a public test key setup. Verified on
-              localnet today, devnet next. Keep real funds away until the key
-              ceremony.
+              New and pre-audit. The proving keys build on the Hermez Powers
+              of Tau; a multi-party ceremony and audits come before size.
+              Treat it as a working proof, not a vault.
             </p>
           </div>
         </div>

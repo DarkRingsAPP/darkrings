@@ -413,15 +413,15 @@ fn sweep(env: &Env) -> Result<()> {
     let deployer_addr = Address::from(env.deployer.pubkey().to_bytes());
     for actor in [&env.lender, &env.borrower] {
         let balance = public_balance(env, actor.address())?;
-        let fee_floor = 10_000;
-        if balance > fee_floor {
+        if balance > 0 {
+            // Empty to exactly zero; the deployer pays the fee as first signer.
             let ix = solana_system_interface::instruction::transfer(
                 &actor.address().into(),
                 &deployer_addr.into(),
-                balance - fee_floor,
+                balance,
             );
             let sig = send(env.client.rpc(), &[&env.deployer, &actor.keypair], ix)?;
-            println!("sweep {} {}  {}", actor.name, sol(balance - fee_floor), explorer(&sig));
+            println!("sweep {} {}  {}", actor.name, sol(balance), explorer(&sig));
         }
         let spendable = scan(env, actor)?;
         let left = shielded_sol(&spendable);
