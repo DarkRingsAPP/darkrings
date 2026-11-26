@@ -6,6 +6,14 @@ Live site and desk: [darkrings.app](https://darkrings.app)
 
 **Live on mainnet.** Program [`4j3MfrBtrhrLV4Lu7JpP5TqbAHbZY6AkLmMUaR3TZHfE`](https://explorer.solana.com/address/4j3MfrBtrhrLV4Lu7JpP5TqbAHbZY6AkLmMUaR3TZHfE). All five instructions settled with real SOL, every figure encrypted, driven from the live desk in a browser (WASM prover + TEE): [offer](https://explorer.solana.com/tx/44FNErAEC799pcLfJBSRR1FEidtNR7AyWh2piQNDnX22GikaGCiGgHMJ6HaJkRHaLR4M9Kg2rp88kG2NDCsDeb8c), [originate](https://explorer.solana.com/tx/5FamroV3jLi5VgcAfkuxbKaHFer3Ek5DWEAxFG4ZxfksYq97qscB5cSGqc6TicS4wrCS81Q75xCLKZ99m5zNBYKN), [repay](https://explorer.solana.com/tx/8Fiao4V4MFuGXKQ8u37fwLk3ofK7W1f4fTsAkGjXbkLB8rRf7RJ9EwedYgu6FXoZybaPVffAuys9JBweDiQtqHe), [cancel](https://explorer.solana.com/tx/26aGJFaBEgZFXfp4BcsSvGKsEbrxnDFcXevzdKAYSfW4P4exT2tJ25mswLBenWPTnSpEye7asEYGX4KHrnCRXHXq), [claim](https://explorer.solana.com/tx/5RP2CzSxcR9AfQiJz2AQm7tkgLo63K51gNUahT6tBJ3JygPC5DWAgRYb3vu8SGv9spqZp38mn9SWJDpfSghg66kR).
 
+## Try it, five minutes
+
+1. Open [darkrings.app/desk](https://darkrings.app/desk). Two session accounts are created in your browser; **Sign in with wallet** derives them from one Phantom signature instead (deterministic, so the same wallet recovers them forever), and **Backup key** exports them.
+2. Send a little SOL (0.01 is plenty) to the lender address shown, then **Shield** the principal amount.
+3. Post an offer, fund the borrower side the same way, shield exactly the collateral, and **Originate**. Shield exactly the repay amount and **Repay**, or let the deadline pass and **Claim** as the lender.
+
+Every click generates a Groth16 proof in the page (WASM) and settles as a real transaction through the deployed program; the activity log links each one to the explorer. On-chain, every figure is ciphertext. It is pre-audit software: keep the amounts to dust.
+
 ## The idea
 
 Every margin system publishes a map of its own weak points. Collateral, debt and the liquidation threshold sit in public accounts, so the exact price at which any position can be forced is computable by anyone, continuously. Encrypting those balances moves the attack surface; it does not remove it, because the protocol still has to evaluate a price feed against a ratio somewhere.

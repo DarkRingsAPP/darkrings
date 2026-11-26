@@ -34,9 +34,30 @@ const router = createBrowserRouter([
       { path: "/changelog", element: <Changelog /> },
       { path: "/research", element: <Research /> },
       { path: "/research/:slug", element: <Research /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);
+
+function NotFound() {
+  return (
+    <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 pt-16 text-center">
+      <p className="num text-[12px] uppercase tracking-[0.2em] text-faint">404</p>
+      <h1 className="display mt-3 text-[clamp(28px,5vw,44px)] uppercase text-bone">
+        Nothing at this address
+      </h1>
+      <p className="mt-3 max-w-[44ch] text-[14px] leading-relaxed text-mute">
+        Which, around here, is usually the point. This page though really does not exist.
+      </p>
+      <a
+        href="/"
+        className="mt-6 rounded-md bg-ember px-4 py-2 text-[13.5px] font-semibold text-void transition-colors hover:bg-ember-hot"
+      >
+        Back to the front page
+      </a>
+    </div>
+  );
+}
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
