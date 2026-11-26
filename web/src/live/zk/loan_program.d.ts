@@ -591,6 +591,8 @@ export function beginKeyTranscode(options: any): KeyTranscoder;
  */
 export function beginStreamingProof(circuit_xbc: Bytes, inputs: any, options: any): StreamingProof;
 
+export function blindingSeed(domain: number, blinding: Uint8Array): Uint8Array;
+
 export function cancelTransaction(inputs: Cancel, sender: Uint8Array, payer: string): ProgramTransaction;
 
 /**
@@ -839,6 +841,7 @@ export interface InitOutput {
     readonly __wbg_verifyingkey_free: (a: number, b: number) => void;
     readonly beginKeyTranscode: (a: any) => number;
     readonly beginStreamingProof: (a: any, b: any, c: any) => [number, number, number];
+    readonly blindingSeed: (a: number, b: number, c: number) => [number, number, number, number];
     readonly cancelTransaction: (a: any, b: number, c: number, d: number, e: number) => [number, number, number];
     readonly checkProvingKey: (a: number, b: number, c: number, d: number) => [number, number];
     readonly circuitDigest: (a: any) => [number, number, number, number];

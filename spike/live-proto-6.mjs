@@ -19,6 +19,7 @@ import {
   waitForLeaf,
   toTsInput,
   toTsOutput,
+  toTsOutputs,
   SppProofInputs,
   ShieldedAddress,
   enc,
@@ -81,7 +82,7 @@ async function makeOffer({ expiry, deadline }) {
   const markerData = new Uint8Array(64);
   markerData.set(offerHash, 0);
   markerData.set(enc.encode(lender.solana), 32);
-  const outputs = ft.outputUtxos.map(toTsOutput);
+  const outputs = toTsOutputs(ft);
   const { externalData } = await finalizeSpp(ctx, ft, outputs, lender.keypair, {
     expiryUnixTs: expiry,
     senderOutputCount: 1,
@@ -161,7 +162,7 @@ const builtCancel = ctx.wasm.cancelTransaction(
   lender.solana,
 );
 const ftC = builtCancel.finalizedTx;
-const cOutputs = ftC.outputUtxos.map(toTsOutput);
+const cOutputs = toTsOutputs(ftC);
 const { externalData: cExt } = await finalizeSpp(ctx, ftC, cOutputs, lender.keypair, { senderOutputCount: cOutputs.length });
 const cSpp = new SppProofInputs({
   payer: ftC.payer,
@@ -218,7 +219,7 @@ const builtOrig = ctx.wasm.originateTransaction(
   borrower.solana,
 );
 const ftO2 = builtOrig.finalizedTx;
-const oOutputs = ftO2.outputUtxos.map(toTsOutput);
+const oOutputs = toTsOutputs(ftO2);
 const { externalData: oExt } = await finalizeSpp(ctx, ftO2, oOutputs, borrower.keypair, {
   expiryUnixTs: now2 + 3600n,
   senderOutputCount: 1,
@@ -283,7 +284,7 @@ const builtClaim = ctx.wasm.claimTransaction(
   lender.solana,
 );
 const ftCl = builtClaim.finalizedTx;
-const clOutputs = ftCl.outputUtxos.map(toTsOutput);
+const clOutputs = toTsOutputs(ftCl);
 const { externalData: clExt } = await finalizeSpp(ctx, ftCl, clOutputs, lender.keypair, { senderOutputCount: clOutputs.length });
 const clSpp = new SppProofInputs({
   payer: ftCl.payer,

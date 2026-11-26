@@ -9,10 +9,18 @@ const PORT = process.env.PORT || 3000;
 const KEY = process.env.HELIUS_API_KEY;
 const DIST = new URL("./dist", import.meta.url).pathname;
 
+/* Prefix routes: the SDK appends subpaths (for example /api/spr/prove/<circuit>/indexed)
+   and its own query parameters; both must reach the upstream intact. */
 const UPSTREAM = {
-  "/api/rpc": `https://mainnet.helius-rpc.com/?api-key=${KEY}`,
-  "/api/spr": `https://mainnet.helius-rpc.com/v1/spr?api-key=${KEY}`,
+  "/api/rpc": "https://mainnet.helius-rpc.com",
+  "/api/spr": "https://mainnet.helius-rpc.com/v1/spr",
 };
+
+const HOP_BY_HOP = new Set([
+  "host", "connection", "keep-alive", "transfer-encoding", "upgrade",
+  "proxy-authorization", "proxy-connection", "te", "trailer", "content-length",
+  "accept-encoding",
+]);
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -28,21 +36,34 @@ const MIME = {
   ".webmanifest": "application/manifest+json",
 };
 
-async function proxy(req, res, upstream) {
+async function proxy(req, res, base, url) {
   if (!KEY) {
     res.writeHead(503, { "content-type": "application/json" });
     res.end(JSON.stringify({ error: "HELIUS_API_KEY not configured" }));
     return;
   }
+  const subpath = url.pathname.slice(base.length);
+  const target = new URL(UPSTREAM[base] + subpath);
+  for (const [k, v] of url.searchParams) target.searchParams.append(k, v);
+  target.searchParams.set("api-key", KEY);
+  const headers = {};
+  for (const [k, v] of Object.entries(req.headers)) {
+    if (!HOP_BY_HOP.has(k.toLowerCase())) headers[k] = v;
+  }
   const chunks = [];
   for await (const c of req) chunks.push(c);
   try {
-    const r = await fetch(upstream, {
+    const r = await fetch(target, {
       method: req.method,
-      headers: { "content-type": req.headers["content-type"] ?? "application/json" },
+      headers,
       body: req.method === "GET" || req.method === "HEAD" ? undefined : Buffer.concat(chunks),
+      redirect: "manual",
     });
-    res.writeHead(r.status, { "content-type": r.headers.get("content-type") ?? "application/json" });
+    const out = {};
+    for (const [k, v] of r.headers) {
+      if (!HOP_BY_HOP.has(k) && k !== "content-encoding") out[k] = v;
+    }
+    res.writeHead(r.status, out);
     res.end(Buffer.from(await r.arrayBuffer()));
   } catch (e) {
     res.writeHead(502, { "content-type": "application/json" });
@@ -61,11 +82,12 @@ async function serveFile(res, path) {
 
 createServer(async (req, res) => {
   const url = new URL(req.url, "http://x");
-  const base = url.pathname;
-  const upstream = UPSTREAM[base];
-  if (upstream) return proxy(req, res, upstream);
+  const base = Object.keys(UPSTREAM).find(
+    (p) => url.pathname === p || url.pathname.startsWith(p + "/"),
+  );
+  if (base) return proxy(req, res, base, url);
   // static with SPA fallback
-  const safe = normalize(base).replace(/^(\.\.[/\\])+/, "");
+  const safe = normalize(url.pathname).replace(/^(\.\.[/\\])+/, "");
   let path = join(DIST, safe === "/" ? "index.html" : safe);
   try {
     const s = await stat(path);

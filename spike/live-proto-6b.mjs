@@ -15,6 +15,7 @@ import {
   sendInstruction,
   toTsInput,
   toTsOutput,
+  toTsOutputs,
   SppProofInputs,
   ShieldedAddress,
   decodeConfidential,
@@ -124,7 +125,10 @@ const builtCancel = ctx.wasm.cancelTransaction(
 );
 const ft = builtCancel.finalizedTx;
 console.log("cancel outputs:", ft.outputUtxos.map((o) => `${o.amount}${o.ownerAddress ? "" : " (pad)"}`));
-const outputs = ft.outputUtxos.map(toTsOutput);
+const outputs = toTsOutputs(ft);
+console.log("ownerTags:", JSON.stringify(ft.ownerTags, (k, v) => v instanceof Uint8Array || ArrayBuffer.isView(v) ? Buffer.from(v).toString("hex") : typeof v === "bigint" ? String(v) : v));
+console.log("lender viewTag:", Buffer.from(lender.keypair.shieldedAddress().confidentialViewTag()).toString("hex"));
+console.log("lender solana:", lender.solana, "authority:", lender.authority);
 const { externalData } = await finalizeSpp(ctx, ft, outputs, lender.keypair, { senderOutputCount: 0 });
 const spp = new SppProofInputs({
   payer: ft.payer,

@@ -2,6 +2,16 @@ import AmberSilk from "../components/AmberSilk.jsx";
 
 const ENTRIES = [
   {
+    date: "2026-11-26",
+    title: "The desk goes live",
+    items: [
+      "Live mode on the desk: two session wallets in the browser, shield, offer, originate, repay, cancel and claim, each a real mainnet transaction with its explorer link",
+      "All five instructions proven from the browser stack: Groth16 proofs in WASM, confidential sealing in TypeScript, the TEE prover behind the site's API proxy",
+      "Cancel and claim cracked client-side: trailing pads are compact padding (published hash and owner tag zero), not named dummies",
+      "Session keys stay in localStorage and never leave the browser; the Helius key never reaches it",
+    ],
+  },
+  {
     date: "2026-11-25",
     title: "Live on Solana mainnet",
     items: [

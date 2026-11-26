@@ -424,6 +424,23 @@ export function beginStreamingProof(circuit_xbc, inputs, options) {
 }
 
 /**
+ * @param {number} domain
+ * @param {Uint8Array} blinding
+ * @returns {Uint8Array}
+ */
+export function blindingSeed(domain, blinding) {
+    const ptr0 = passArray8ToWasm0(blinding, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.blindingSeed(domain, ptr0, len0);
+    if (ret[3]) {
+        throw takeFromExternrefTable0(ret[2]);
+    }
+    var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v2;
+}
+
+/**
  * @param {Cancel} inputs
  * @param {Uint8Array} sender
  * @param {string} payer

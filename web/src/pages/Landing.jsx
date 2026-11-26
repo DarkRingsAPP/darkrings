@@ -254,10 +254,14 @@ const PROOFS = [
   },
 ];
 
+/* One full lifecycle driven from the live desk in a browser, plus the two
+   admin paths (cancel after expiry, claim after default), all on mainnet. */
 const MAINNET_TXS = [
-  ["Offer", "3ssx9gJT5RYHCBDgqSWvQM3QKuEHHYXcbyvoQQRG8rZoJdjSgmqNgRrfKBEM6oWfZEAyGMayFKcUCUeXYAA2W6sG"],
-  ["Originate", "4FY9asu1pZfppLKHtp7sr6Z3pG9VskzcrKcePSHBGfLKC4ofhRJkUufEGdMf57gfndXsJr4jbEbY2CP9KnBzMBwm"],
-  ["Repay", "yrCDVMU1TkUQ4i6ECzzfGPjQSxGsLE1TMAJKgW36wfqPaq395aWgKCQcPdwFsiSRtHN2P2dNPiiAUSrTD9jFkvj"],
+  ["Offer", "44FNErAEC799pcLfJBSRR1FEidtNR7AyWh2piQNDnX22GikaGCiGgHMJ6HaJkRHaLR4M9Kg2rp88kG2NDCsDeb8c"],
+  ["Originate", "5FamroV3jLi5VgcAfkuxbKaHFer3Ek5DWEAxFG4ZxfksYq97qscB5cSGqc6TicS4wrCS81Q75xCLKZ99m5zNBYKN"],
+  ["Repay", "8Fiao4V4MFuGXKQ8u37fwLk3ofK7W1f4fTsAkGjXbkLB8rRf7RJ9EwedYgu6FXoZybaPVffAuys9JBweDiQtqHe"],
+  ["Cancel", "26aGJFaBEgZFXfp4BcsSvGKsEbrxnDFcXevzdKAYSfW4P4exT2tJ25mswLBenWPTnSpEye7asEYGX4KHrnCRXHXq"],
+  ["Claim", "5RP2CzSxcR9AfQiJz2AQm7tkgLo63K51gNUahT6tBJ3JygPC5DWAgRYb3vu8SGv9spqZp38mn9SWJDpfSghg66kR"],
 ];
 
 function Proof() {
@@ -330,7 +334,7 @@ function Proof() {
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-void/10 pt-4">
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-void/55">
-                Live on mainnet, one full loan:
+                Live on mainnet, all five instructions from the desk in a browser:
               </span>
               {MAINNET_TXS.map(([label, sig]) => (
                 <a

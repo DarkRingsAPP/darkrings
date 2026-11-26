@@ -131,14 +131,18 @@ export function toTsInput(u) {
   });
 }
 
-export function toTsOutput(o) {
+export function toTsOutput(o, padTag) {
   if (!o.ownerAddress) {
-    // Padding slot: no owner, zero amount; keep the wasm's blinding and tag.
+    // Padding slot. A zero resolved tag means the builder used compact padding
+    // (publishes hash 0 and owner tag 0); a named tag means a random dummy. A
+    // non-compact pad with a zero tag names nobody, which the circuit rejects.
+    const tag = padTag ?? o.ownerTag;
+    const compact = !tag || Buffer.from(tag).every((b) => b === 0);
     return createProofOutput({
       asset: SOL_MINT_ADDR,
       amount: 0n,
       blinding: o.blinding,
-      ...(o.ownerTag ? { ownerTag: o.ownerTag } : {}),
+      ...(compact ? { compact: true } : { ownerTag: tag }),
     });
   }
   return createProofOutput({
@@ -149,6 +153,11 @@ export function toTsOutput(o) {
     ...(o.dataHash ? { dataHash: o.dataHash } : {}),
     data: new Data(o.data?.records ?? []),
   });
+}
+
+/** All outputs of a wasm FinalizedTransaction, pads named by its resolved tags. */
+export function toTsOutputs(ft) {
+  return ft.outputUtxos.map((o, i) => toTsOutput(o, o.ownerAddress ? undefined : ft.ownerTags?.[i]?.resolved));
 }
 
 export const beDec = (b) => {
@@ -214,7 +223,10 @@ export function finalizeSpp(ctx, ft, tsOutputs, senderKeypair, { messages = [], 
       const slot = encrypted.payload[index];
       const utxoHash = output.hash(ft.outputTreeId);
       if (!slot) {
-        // Padding slot: the wasm's resolved tag and a length-matched random body.
+        // Padding slot. Trailing compact padding is left out of the external
+        // data entirely (SPP reads the omitted tag as 0); a named dummy gets a
+        // length-matched random body under the wasm's resolved tag.
+        if (output.isCompact()) return;
         const tag = ft.ownerTags[index];
         const body = new Uint8Array(realLength);
         crypto.getRandomValues(body);

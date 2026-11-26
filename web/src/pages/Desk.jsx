@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion as m, useReducedMotion } from "motion/react";
 import {
   CheckCircle,
@@ -24,6 +24,7 @@ import {
 const EASE = [0.16, 1, 0.3, 1];
 const ViewKeyCtx = createContext(true);
 const DEMO_WALLET = "7dKj…9mAw";
+const LiveDesk = lazy(() => import("../live/LiveDesk.jsx"));
 
 /* --------------------------------- helpers -------------------------------- */
 
@@ -731,6 +732,7 @@ function PositionsTable({ positions, now, onRepay, onClaim }) {
 
 export default function Desk() {
   const now = useNow();
+  const [mode, setMode] = useState("demo");
   const [tab, setTab] = useState("markets");
   const [marketId, setMarketId] = useState(MARKETS[0].id);
   const [offers, setOffers] = useState(OFFERS);
@@ -840,10 +842,28 @@ export default function Desk() {
               <h1 className="display text-[clamp(22px,2.4vw,28px)] uppercase text-bone">
                 The desk
               </h1>
-              <span className="rounded border border-line-bright px-1.5 py-0.5 font-ui text-[9px] font-medium uppercase tracking-wider text-mute">
-                demo data
-              </span>
-              <div className="ml-2 hidden gap-5 border-l border-line pl-5 sm:flex">
+              <div className="flex overflow-hidden rounded border border-line-bright">
+                {[
+                  ["demo", "Demo"],
+                  ["live", "Live"],
+                ].map(([id, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setMode(id)}
+                    className={`px-2 py-0.5 font-ui text-[9px] font-medium uppercase tracking-wider transition-colors ${
+                      mode === id
+                        ? id === "live"
+                          ? "bg-ember text-void"
+                          : "bg-line-bright text-bone"
+                        : "text-mute hover:text-ink"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className={`ml-2 hidden gap-5 border-l border-line pl-5 sm:flex ${mode === "live" ? "invisible" : ""}`}>
                 {[
                   ["markets", "Markets"],
                   ["offers", `My offers${myOffers.length ? ` (${myOffers.length})` : ""}`],
@@ -895,6 +915,20 @@ export default function Desk() {
             </button>
           </div>
 
+          {mode === "live" ? (
+            <div className="mt-4">
+              <Suspense
+                fallback={
+                  <div className="rounded-lg border border-line bg-surface px-6 py-14 text-center text-[14px] text-mute">
+                    Loading the live engine…
+                  </div>
+                }
+              >
+                <LiveDesk />
+              </Suspense>
+            </div>
+          ) : (
+          <>
           {/* mobile tabs */}
           <div className="mt-4 flex gap-5 border-b border-line sm:hidden">
             {[
@@ -960,13 +994,17 @@ export default function Desk() {
               />
             )}
           </div>
+          </>
+          )}
         </div>
 
         {/* status bar */}
         <div className="keyline relative">
           <div className="mx-auto flex max-w-[1480px] flex-wrap items-center justify-between gap-2 px-4 py-2.5 md:px-6">
             <span className="font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-faint">
-              Demo desk, sample data. Settlement logic mirrors the on-chain program.
+              {mode === "live"
+                ? "Live desk. Every action settles through the deployed program on mainnet."
+                : "Demo desk, sample data. Settlement logic mirrors the on-chain program."}
             </span>
             <span className="num text-[10px] text-faint">{"program 4j3M…ZHfE"}</span>
           </div>
