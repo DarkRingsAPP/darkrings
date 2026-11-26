@@ -53,9 +53,13 @@ function useNow() {
 
 /* ------------------------------ wallet card -------------------------------- */
 
-function WalletCard({ role, actor, balance, notes, busy, onDeposit, onWithdraw, onRefresh }) {
+function WalletCard({ role, actor, balance, notes, busy, onDeposit, onWithdraw, onRestore, onDerive, onRefresh }) {
   const [amt, setAmt] = useState("");
   const [copied, setCopied] = useState(false);
+  const [keyCopied, setKeyCopied] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const [restoreHex, setRestoreHex] = useState("");
+  const [restoreError, setRestoreError] = useState(null);
   const address = actor?.signer?.address ?? "";
   const shielded = (notes ?? []).reduce((n, u) => n + u.utxo.amount, 0n);
   const copy = async () => {
@@ -63,6 +67,17 @@ function WalletCard({ role, actor, balance, notes, busy, onDeposit, onWithdraw, 
       await navigator.clipboard.writeText(address);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+  const backupKey = async () => {
+    try {
+      const hexSeed = [...(actor?.seed ?? [])].map((b) => b.toString(16).padStart(2, "0")).join("");
+      if (!hexSeed) return;
+      await navigator.clipboard.writeText(hexSeed);
+      setKeyCopied(true);
+      setTimeout(() => setKeyCopied(false), 2500);
     } catch {
       /* ignore */
     }
@@ -126,6 +141,68 @@ function WalletCard({ role, actor, balance, notes, busy, onDeposit, onWithdraw, 
       <p className="mt-2 text-[10.5px] leading-relaxed text-faint">
         Send SOL to the address above to fund it, then shield the exact amounts a flow needs: notes are spent whole. Unshield returns funds to the public address.
       </p>
+      <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-2.5">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            setRestoreError(null);
+            onDerive().catch((e) => setRestoreError(e.message ?? String(e)));
+          }}
+          className="font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-ember transition-colors hover:text-ember-hot disabled:opacity-40"
+        >
+          Sign in with wallet
+        </button>
+        <button
+          type="button"
+          onClick={backupKey}
+          className="font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-mute transition-colors hover:text-ink"
+        >
+          Backup key
+        </button>
+        {keyCopied && (
+          <span className="font-ui text-[9px] uppercase tracking-wider text-moss">copied, store it like a seed phrase</span>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            setRestoring((r) => !r);
+            setRestoreError(null);
+          }}
+          className="font-ui text-[9.5px] font-medium uppercase tracking-[0.12em] text-mute transition-colors hover:text-ink"
+        >
+          Restore key
+        </button>
+      </div>
+      {restoring && (
+        <div className="mt-2 flex gap-1.5">
+          <input
+            value={restoreHex}
+            onChange={(e) => {
+              setRestoreHex(e.target.value);
+              setRestoreError(null);
+            }}
+            placeholder="64 hex characters"
+            className={FIELD + " num"}
+            spellCheck={false}
+          />
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              try {
+                onRestore(restoreHex);
+              } catch (e) {
+                setRestoreError(e.message ?? String(e));
+              }
+            }}
+            className={BTN_GHOST + " shrink-0"}
+          >
+            Load
+          </button>
+        </div>
+      )}
+      {restoreError && <p className="mt-1 text-[10.5px] text-ember">{restoreError}</p>}
     </div>
   );
 }
@@ -273,6 +350,14 @@ export default function LiveDesk() {
             onWithdraw={(lamports) =>
               run(`unshield ${fmtSol(lamports)} SOL (${role})`, (eng) => eng.loan.withdraw(eng.actors[role], lamports), [role])
             }
+            onRestore={(hexSeed) => {
+              engineRef.current?.session.importSeed(role, hexSeed);
+              window.location.reload();
+            }}
+            onDerive={async () => {
+              await engineRef.current?.session.deriveSeedFromWallet(role);
+              window.location.reload();
+            }}
           />
         ))}
       </div>
@@ -475,7 +560,7 @@ export default function LiveDesk() {
       <div className="flex flex-wrap items-center gap-2 bg-surface px-4 py-2.5">
         <Key size={11} weight="bold" className="text-faint" />
         <span className="text-[10.5px] text-faint">
-          Session keys live in this browser's localStorage. Clearing site data forgets them and any funds they hold, so keep the amounts small.
+          Sign in with wallet derives your session keys from one signature: the same wallet re-derives them forever, nothing to back up. Keys created at random live only in this browser's localStorage, so back them up; clearing site data forgets them and any funds they hold.
         </span>
       </div>
     </div>

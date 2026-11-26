@@ -1,0 +1,5 @@
+# Only the web app reaches Railway; the service's root directory is web/.
+/*
+!/web
+web/node_modules
+web/dist

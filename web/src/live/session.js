@@ -49,6 +49,40 @@ export function exportSeed(role) {
   }
 }
 
+/** Restores a session wallet from a backed-up 32-byte hex seed. */
+export function importSeed(role, hexSeed) {
+  const t = String(hexSeed ?? "").trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(t)) throw new Error("a session key is 64 hex characters");
+  localStorage.setItem(KEY(role), t);
+}
+
+/** The injected Solana wallet provider, when one exists. */
+export function walletProvider() {
+  const p = window.phantom?.solana ?? window.solflare ?? window.solana;
+  return p && typeof p.signMessage === "function" ? p : null;
+}
+
+/**
+ * Derives the session seed from one wallet signature: ed25519 signatures are
+ * deterministic, so the same wallet re-derives the same keys forever. The
+ * wallet's own private key never leaves the extension; only the signature of
+ * this fixed, legible message is hashed. The Elusiv and zk.money pattern.
+ */
+export async function deriveSeedFromWallet(role) {
+  const provider = walletProvider();
+  if (!provider) throw new Error("no Solana wallet extension found in this browser");
+  await provider.connect();
+  const message = new TextEncoder().encode(
+    `DarkRings session key v1\nrole: ${role}\n\nSigning this derives the private keys of your ${role} session at darkrings.app. Sign it nowhere else.`,
+  );
+  const signed = await provider.signMessage(message, "utf8");
+  const signature = signed.signature ?? signed;
+  const digest = await crypto.subtle.digest("SHA-256", new Uint8Array(signature));
+  const seed = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  localStorage.setItem(KEY(role), seed);
+  return seed;
+}
+
 export async function makeActor(role) {
   const client = await getClient();
   const seed = loadSeed(role);
