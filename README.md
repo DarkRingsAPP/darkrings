@@ -2,7 +2,7 @@
 
 **Private fixed-term lending on Solana Privacy Rings. Loans without a liquidation price.**
 
-Live site and demo desk: [darkrings.app](https://darkrings.app)
+Live site and desk: [darkrings.app](https://darkrings.app)
 
 **Live on mainnet.** Program [`4j3MfrBtrhrLV4Lu7JpP5TqbAHbZY6AkLmMUaR3TZHfE`](https://explorer.solana.com/address/4j3MfrBtrhrLV4Lu7JpP5TqbAHbZY6AkLmMUaR3TZHfE). All five instructions settled with real SOL, every figure encrypted, driven from the live desk in a browser (WASM prover + TEE): [offer](https://explorer.solana.com/tx/44FNErAEC799pcLfJBSRR1FEidtNR7AyWh2piQNDnX22GikaGCiGgHMJ6HaJkRHaLR4M9Kg2rp88kG2NDCsDeb8c), [originate](https://explorer.solana.com/tx/5FamroV3jLi5VgcAfkuxbKaHFer3Ek5DWEAxFG4ZxfksYq97qscB5cSGqc6TicS4wrCS81Q75xCLKZ99m5zNBYKN), [repay](https://explorer.solana.com/tx/8Fiao4V4MFuGXKQ8u37fwLk3ofK7W1f4fTsAkGjXbkLB8rRf7RJ9EwedYgu6FXoZybaPVffAuys9JBweDiQtqHe), [cancel](https://explorer.solana.com/tx/26aGJFaBEgZFXfp4BcsSvGKsEbrxnDFcXevzdKAYSfW4P4exT2tJ25mswLBenWPTnSpEye7asEYGX4KHrnCRXHXq), [claim](https://explorer.solana.com/tx/5RP2CzSxcR9AfQiJz2AQm7tkgLo63K51gNUahT6tBJ3JygPC5DWAgRYb3vu8SGv9spqZp38mn9SWJDpfSghg66kR).
 
@@ -41,7 +41,7 @@ loan/        The on-chain program and its circuits
   test/      Unit, adversarial and localnet end-to-end suites
   mainnet-run/  The binary that drove the mainnet lifecycle: fund, deposit, run, sweep
 spike/       Mainnet SPR SDK spike: register, deposit, private transfer, withdraw (TypeScript)
-web/         The site and demo desk (Vite + React), live at darkrings.app
+web/         The site and live desk (Vite + React), live at darkrings.app
 docs/        MECHANISM.md, the full protocol design
 test-utils/  Localnet harness (surfpool validator + photon indexer + prover)
 ```
@@ -64,7 +64,7 @@ The web app is a standard Vite project: `npm install && npm run dev` inside `web
 
 ## Honest boundaries
 
-Addresses stay visible in the default ring, so participation in DarkRings is public even while every figure is not. Deposits from and withdrawals to public accounts reveal themselves. The proving keys build on the public Hermez Powers of Tau phase-1 ceremony with a single-party phase-2 contribution whose randomness the toolchain discards; a multi-party phase-2 ceremony replaces them before the protocol custodies meaningful value. The desk at darkrings.app opens in demo mode on sample data; its live mode drives the deployed program on mainnet with session keys that never leave the browser.
+Addresses stay visible in the default ring, so participation in DarkRings is public even while every figure is not. Deposits from and withdrawals to public accounts reveal themselves. The proving keys build on the public Hermez Powers of Tau phase-1 ceremony with a single-party phase-2 contribution whose randomness the toolchain discards; a multi-party phase-2 ceremony replaces them before the protocol custodies meaningful value. The desk at darkrings.app drives the deployed program on mainnet directly, with session keys that never leave the browser; keep the amounts small until the ceremony and audits land.
 
 ## Built on
 

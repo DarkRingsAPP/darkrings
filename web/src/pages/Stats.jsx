@@ -1,14 +1,13 @@
 import AmberSilk from "../components/AmberSilk.jsx";
 import NumberTicker from "../components/NumberTicker.jsx";
-import { MARKETS } from "../lib/demo.js";
 
 const PUBLIC_STATS = [
-  { n: MARKETS.length, label: "live markets", sub: "isolated parameter sets" },
+  { n: 1, label: "asset on the desk", sub: "SOL today, any mint by design" },
   { n: 5, label: "instructions", sub: "the whole lifecycle" },
   { n: 5, label: "circuits", sub: "one proof per move" },
   { n: 75, label: "tests passing", sub: "adversarial cases included" },
   { n: 128, label: "bytes per proof", sub: "verified on-chain" },
-  { n: 33, label: "offers on the books", sub: "demo data, counted not sized" },
+  { n: 8, label: "mainnet settlements", sub: "the proof lifecycle, linked on the front page" },
 ];
 
 const REDACTED = [
@@ -72,9 +71,8 @@ export default function Stats() {
           ))}
         </div>
         <p className="mt-6 max-w-[64ch] text-[12.5px] leading-relaxed text-faint">
-          Figures above marked as demo reflect the sample desk, counted but
-          never sized. When the protocol is live, this page will keep exactly
-          this shape.
+          Counts only, never sizes: that is the whole point. The protocol is
+          live on mainnet and this page keeps exactly this shape as it grows.
         </p>
       </div>
     </div>

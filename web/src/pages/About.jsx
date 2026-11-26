@@ -14,7 +14,7 @@ const BLOCKS = [
     "Non-custodial throughout: a program-derived address holds escrow, nobody holds your keys",
   ] },
   { t: "h2", x: "Where it came from" },
-  { t: "p", x: "DarkRings is built for the Solana Privacy Rings ecosystem, on the rails Helius shipped to mainnet in November 2026. The loan program, its five zero-knowledge circuits and its full test suite were built and verified first; this site and the demo desk sit on top of that work, not in place of it." },
+  { t: "p", x: "DarkRings is built for the Solana Privacy Rings ecosystem, on the rails Helius shipped to mainnet in November 2026. The loan program, its five zero-knowledge circuits and its full test suite were built and verified first; this site and the live desk sit on top of that work, not in place of it." },
   { t: "h2", x: "Where it is going" },
   { t: "ul", x: [
     "Trusted setup ceremony for the five circuits",
@@ -22,7 +22,7 @@ const BLOCKS = [
     "Devnet deployment, then mainnet with conservative caps",
     "Open-sourcing the full repository with the hackathon submission",
   ] },
-  { t: "callout", x: "Until the ceremony and the audit, the desk runs demo data. We would rather ship you proof than promises." },
+  { t: "callout", x: "Until the ceremony and the audit, keep the desk to small amounts. We would rather ship you proof than promises." },
 ];
 
 export default function About() {
