@@ -7,7 +7,6 @@ import AmberSilk from "../components/AmberSilk.jsx";
 import LoanTicket from "../components/LoanTicket.jsx";
 import ScrollDecrypt from "../components/ScrollDecrypt.jsx";
 import Spotlight from "../components/Spotlight.jsx";
-import TiltCard from "../components/TiltCard.jsx";
 import Magnetic from "../components/Magnetic.jsx";
 import VelocityMarquee from "../components/VelocityMarquee.jsx";
 import NumberTicker from "../components/NumberTicker.jsx";
@@ -164,9 +163,7 @@ function TicketShowcase() {
           className="relative flex justify-center"
         >
           <Guilloche className="pointer-events-none absolute left-1/2 top-1/2 h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 text-bone" />
-          <TiltCard max={7}>
-            <LoanTicket />
-          </TiltCard>
+          <LoanTicket />
         </m.div>
         <div className="md:pl-6">
           <h2 className="display text-[clamp(36px,5vw,64px)] uppercase leading-[1.0] text-bone">
@@ -396,8 +393,7 @@ function Markets() {
               transition={{ duration: 0.6, delay: reduce ? 0 : i * 0.07, ease: SOFT }}
               className={i % 2 === 1 ? "lg:mt-10" : ""}
             >
-              <TiltCard max={6}>
-                <Spotlight className="rounded-xl border border-line bg-surface p-5">
+              <Spotlight className="rounded-xl border border-line bg-surface p-5">
                   <div className="flex items-baseline justify-between">
                     <p className="font-mono text-[14px] font-medium text-bone">
                       {mk.collateral}/{mk.principal}
@@ -422,7 +418,6 @@ function Markets() {
                     </div>
                   </div>
                 </Spotlight>
-              </TiltCard>
             </m.div>
           ))}
         </div>
