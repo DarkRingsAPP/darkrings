@@ -53,7 +53,7 @@ function useNow() {
 
 /* ------------------------------ wallet card -------------------------------- */
 
-function WalletCard({ role, actor, balance, notes, busy, onDeposit, onRefresh }) {
+function WalletCard({ role, actor, balance, notes, busy, onDeposit, onWithdraw, onRefresh }) {
   const [amt, setAmt] = useState("");
   const [copied, setCopied] = useState(false);
   const address = actor?.signer?.address ?? "";
@@ -114,9 +114,17 @@ function WalletCard({ role, actor, balance, notes, busy, onDeposit, onRefresh })
         >
           Shield
         </button>
+        <button
+          type="button"
+          disabled={busy || parseSol(amt) === null || parseSol(amt) === 0n}
+          onClick={() => onWithdraw(parseSol(amt)).then(() => setAmt(""))}
+          className={BTN_GHOST + " shrink-0"}
+        >
+          Unshield
+        </button>
       </div>
       <p className="mt-2 text-[10.5px] leading-relaxed text-faint">
-        Send SOL to the address above to fund it, then shield the exact amounts a flow needs: notes are spent whole.
+        Send SOL to the address above to fund it, then shield the exact amounts a flow needs: notes are spent whole. Unshield returns funds to the public address.
       </p>
     </div>
   );
@@ -261,6 +269,9 @@ export default function LiveDesk() {
             onRefresh={() => refresh([role])}
             onDeposit={(lamports) =>
               run(`shield ${fmtSol(lamports)} SOL (${role})`, (eng) => eng.loan.deposit(eng.actors[role], lamports), [role])
+            }
+            onWithdraw={(lamports) =>
+              run(`unshield ${fmtSol(lamports)} SOL (${role})`, (eng) => eng.loan.withdraw(eng.actors[role], lamports), [role])
             }
           />
         ))}

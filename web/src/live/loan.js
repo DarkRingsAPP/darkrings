@@ -7,6 +7,7 @@ import {
   ShieldedAddress,
   ShieldedPublicKey,
   SHIELDED_POOL_PROGRAM_ID,
+  buildWithdrawalTransaction,
   syncWallet,
 } from "@heliuslabs/spr";
 import {
@@ -148,6 +149,22 @@ export async function deposit(actor, lamports) {
     ],
   });
   const sig = await sendInstruction(ix, actor);
+  return { sig, explorer: explorer(sig) };
+}
+
+/** Unshield back to the session wallet's public account. */
+export async function withdraw(actor, lamports) {
+  const { client } = await getCtx();
+  await syncNotes(actor);
+  const tx = await buildWithdrawalTransaction({
+    client,
+    wallet: actor.wallet,
+    keys: actor.keys,
+    feePayer: actor.signer.address,
+    recipient: actor.signer.address,
+    amount: BigInt(lamports),
+  });
+  const { sig } = await submit(tx, [actor.signer]);
   return { sig, explorer: explorer(sig) };
 }
 
