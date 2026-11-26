@@ -251,7 +251,7 @@ export default function LiveDesk() {
       {/* banner */}
       <div className="flex flex-wrap items-center justify-between gap-2 bg-surface px-4 py-2.5">
         <span className="font-ui text-[10px] font-medium uppercase tracking-[0.12em] text-ember">
-          Live on mainnet. Real SOL, real proofs, session keys stay in this browser.
+          Real SOL, real proofs. Session keys are created here and never leave this browser.
         </span>
         <span className="num text-[10px] text-faint">both roles run locally so one person can walk the whole lifecycle</span>
       </div>
