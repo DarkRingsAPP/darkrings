@@ -929,6 +929,19 @@ export default function Desk() {
             </div>
           ) : (
           <>
+          {/* live pointer */}
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-md border border-ember/30 bg-ember/5 px-3 py-2">
+            <span className="font-ui text-[10px] font-medium uppercase tracking-[0.12em] text-ember">
+              Sample data for the tour. The deployed program runs in Live mode, on mainnet.
+            </span>
+            <button
+              type="button"
+              onClick={() => setMode("live")}
+              className="rounded bg-ember px-2.5 py-1 text-[11px] font-semibold text-void transition-colors hover:bg-ember-hot"
+            >
+              Switch to Live
+            </button>
+          </div>
           {/* mobile tabs */}
           <div className="mt-4 flex gap-5 border-b border-line sm:hidden">
             {[
